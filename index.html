@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Monaco Editor Sample</title>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	</head>
+	<body>
+		<textarea id="textarea1" rows="8" cols="40"></textarea>
+		<input type="button" id="call_qt_cxx" value="call_qt_cxx" onclick="on_call_qt_cxx_clicked()"/>
+		<script>
+			function append_text_to_textarea1(str)
+			{
+				document.getElementById('textarea1').value += str + QtWidget.jsVisibleVar + '\n';
+			}
+			function on_call_qt_cxx_clicked()
+			{
+				QtWidget.jsVisibleFunc("call qt cxx from js");
+			}
+		</script>
+
+		<script src="qwebchannel.js"></script>
+		<script>
+			new QWebChannel(qt.webChannelTransport,function(channel)
+			{
+				window.QtWidget = channel.objects.QtWidget;
+			});
+		</script>
+
+		<!--#######################################################################-->
+	
+		<h4>Monaco Editor Sample</h4>
+		<div id="container" style="width: 600px; height: 400px; border: 1px solid grey"></div>
+		<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
+		<script src="./monaco-editor/dev/vs/loader.js"></script>
+		<script>
+			require.config({ paths: { vs: './monaco-editor/dev/vs' } });
+			require(['vs/editor/editor.main'],function()
+			{
+				var editor = monaco.editor.create(document.getElementById('container'),
+				{
+					value:
+					[
+						'#include <stdio.h>',
+						'#include <unistd.h>',
+						'',
+						'int main(int argc, char* argv[])',
+						'{',
+						'\tint n = 0;',
+						'\twhile(1)',
+						'\t{',
+						'\t\tprintf("[%d] This is Monaco Editor Sample!\\n",num);',
+						'\t\tnum += 1;',
+						'\t\tsleep(1);',
+						'\t}',
+						'\treturn 0;',
+						'}',
+						''
+					].join('\n'),
+					language: 'cpp'
+				});
+			});
+		</script>
+	</body>
+</html>
